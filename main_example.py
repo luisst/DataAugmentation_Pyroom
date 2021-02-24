@@ -1,31 +1,35 @@
 import numpy as np
 import sounddevice as sd
+import os
+import os.path
 
 from cfg_pyroom import fs
 from DA_pyroom import DAwithPyroom
 
-"""
-CAUTION: Simulated dataset is in int16 dtype
-"""
-NPY_NAME = r'my_dataset'
 
-BASE_PATH = r'./'
+BASE_PATH = r'/home/luis/Downloads/ctc_SC/NPY_files/pyroom_input/'
 
-# Set systems paths
-INPUT_PATH = BASE_PATH + NPY_NAME + '.npy'
-OUTPUT_PATH = BASE_PATH + NPY_NAME + '_DA'+'.npy'
+for item in sorted(os.listdir(BASE_PATH)):
+    NPY_NAME = item.split('.')[0]
+    print(NPY_NAME)
 
-# Init class DA with pyroom
-my_sim = DAwithPyroom(INPUT_PATH)
+    # Set systems paths
+    INPUT_PATH = BASE_PATH + NPY_NAME + '.npy'
+    OUTPUT_PATH = BASE_PATH + NPY_NAME + '_DA'+'.npy'
 
-# Call method sim_dataset to create simulated dataset
-my_dataset_simulated = my_sim.sim_dataset()
+    # Init class DA with pyroom
+    my_sim = DAwithPyroom(INPUT_PATH, float_flag=True)
 
-# Save GT
-np.save(OUTPUT_PATH, my_dataset_simulated)
+    # Call method sim_dataset to create simulated dataset
+    my_dataset_simulated = my_sim.sim_dataset(position=0)
 
-# Listen to a sample from the simulation
-sd.play(my_dataset_simulated[1,:], fs)
+    # Save GT
+    np.save(OUTPUT_PATH, my_dataset_simulated)
+
+    # Listen to a sample from the simulation
+    # sd.play(my_dataset_simulated[1,:], fs)
+
+
 
 
 
